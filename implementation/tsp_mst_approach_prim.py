@@ -48,25 +48,23 @@ def preorder_traversal(mst, start):
     return path
 
 
-def tsp_mst_approximation(adj):
+def tsp_mst_prim(adj):
     mst = prim_mst(adj)
     path = preorder_traversal(mst, 0)
     path.append(path[0])  # return to the starting point
-    return path
+    cost = sum(adj[path[i]][path[i + 1]] for i in range(len(path) - 1))
+    return cost,path
 
 
 # Fonction pour mesurer le temps d'exécution d'une fonction
-def measure_execution_time_mst_prim(func, *args, **kwargs):
-    """
-    Mesure le temps d'exécution d'une fonction donnée.
-    - func: fonction à exécuter.
-    - args, kwargs: arguments passés à la fonction.
-    """
-    start_time = time.time()  # Temps de départ
-    result = func(*args, **kwargs)  # Appel de la fonction
-    end_time = time.time()  # Temps de fin
-    print(f"Temps d'exécution de {func.__name__}: {end_time - start_time:.6f} secondes")
-    return result
+
+def measure_execution_time_mst_prim(distances):
+    start_time = time.time()
+    cost, path = tsp_mst_prim(distances)
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return cost, path, execution_time
+
 
 
 # Code principal
@@ -80,10 +78,8 @@ if __name__ == "__main__":
         adj = generate_random_matrix(num_cities=number_cities, symmetric=True)
 
         # Mesure le temps d'exécution de l'approximation TSP avec Prim
-        path = measure_execution_time_mst_prim(tsp_mst_approximation, adj)
+        cost, path, execution_time = measure_execution_time_mst_prim(adj)
 
-        # Calcul du coût total du chemin
-        cost = sum(adj[path[i]][path[i + 1]] for i in range(len(path) - 1))
 
         # Affichage des résultats
         print("Chemin approximatif du TSP (MST avec Prim) :", path)

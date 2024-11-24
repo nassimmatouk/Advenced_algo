@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 
 from helper.useful import generate_random_matrix
 from implementation.tsp_branch_and_bound import measure_execution_time_branch_bound
+from implementation.tsp_brute_force_copy import measure_execution_time_brute_force
 from implementation.tsp_mst_approach_krusKal import measure_execution_time_mst_kruskal
 from implementation.tsp_mst_approach_prim import measure_execution_time_mst_prim
 
@@ -18,7 +19,7 @@ class Algorithm(Enum):
     BRANCH_BOUND = measure_execution_time_branch_bound, "b"
     MST_KRUSKAL = measure_execution_time_mst_kruskal, "r"
     MST_PRIM = measure_execution_time_mst_prim, "o"
-
+    BRUTE_FORCE = measure_execution_time_brute_force, "g"
 
 class Worbench:
     def __init__(self, algo_to_compare: List[Algorithm],
@@ -56,19 +57,21 @@ class Worbench:
             print(f"*************Start ALGO: {algo}***************")
             number_nodes = []
             execution_times = []
+            #memory_consommings = []
             costs = []
-            final_paths = []
+            paths = []
             for number_node in range(*self.interval_numbers_nodes):
                 matrix_adj = self.get_adjency_matrix(number_node)
-                cost, final_path, execution_time =algo.value[0](matrix_adj)
-                print(f"************************ALGO {algo}****NODES : {number_node}, TIMES, {execution_time}, DISTANCES : {cost}, OPTIMAL PATh : {final_path}*************")
+                # On exécute chaque algo ici
+                cost, path, execution_time=algo.value[0](matrix_adj)
+                print(f"************************ALGO {algo}****NODES : {number_node}, TIMES, {execution_time},DISTANCES : {cost}, OPTIMAL PATH : {path}*************")
 
                 number_nodes.append(number_node)
                 execution_times.append(execution_time)
                 costs.append(cost)
-                final_paths.append(final_path)
+                paths.append(path)
             self.data_to_plot[algo.name] = (number_nodes, execution_times, algo.value[1])
-            self.data_to_store[algo.name] = (number_nodes, execution_times, costs, final_paths)
+            self.data_to_store[algo.name] = (number_nodes, execution_times, costs, paths)
             print(f"*************END ALGO: {algo}***************")
 
 

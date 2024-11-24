@@ -1,9 +1,7 @@
+
 import sys
 import time
-
-import numpy as np
-
-from helper.useful import generate_random_matrix
+from helper.useful import generate_random_matrix, process_memory
 
 
 class BrandAndBoundTSPSolution:
@@ -12,7 +10,7 @@ class BrandAndBoundTSPSolution:
         self.adj = adj
         self.final_path = [None] * (self.N + 1)
         self.visited = [False] * self.N
-        self.final_res = sys.maxsize
+        self.cost = sys.maxsize
 
     def copy_to_final(self, curr_path):
         for index in range(self.N):
@@ -42,9 +40,9 @@ class BrandAndBoundTSPSolution:
         if level == self.N:
             if self.adj[curr_path[level - 1]][curr_path[0]] != 0:
                 curr_res = curr_weight + self.adj[curr_path[level - 1]][curr_path[0]]
-                if curr_res < self.final_res:
+                if curr_res < self.cost:
                     self.copy_to_final(curr_path)
-                    self.final_res = curr_res
+                    self.cost = curr_res
             return
 
         for i in range(self.N):
@@ -57,7 +55,7 @@ class BrandAndBoundTSPSolution:
                 else:
                     curr_bound -= (self.second_min(curr_path[level - 1]) + self.first_min(i)) / 2
 
-                if curr_bound + curr_weight < self.final_res:
+                if curr_bound + curr_weight < self.cost:
                     curr_path[level] = i
                     self.visited[i] = True
                     self.tsp_rec(curr_bound, curr_weight, level + 1, curr_path)
@@ -68,7 +66,7 @@ class BrandAndBoundTSPSolution:
                 for j in range(level):
                     self.visited[curr_path[j]] = True
 
-    def solve(self):
+    def tsp_branch_and_bound(self):
         curr_path = [-1] * (self.N + 1)
         curr_bound = 0
 
@@ -82,15 +80,19 @@ class BrandAndBoundTSPSolution:
 
         self.tsp_rec(curr_bound, 0, 1, curr_path)
 
-        return self.final_res, self.final_path
+        return self.cost, self.final_path
 
+# fonction pour le calcul du temps d'exécution et de l'espace en memoire
 def measure_execution_time_branch_bound(distances):
     start_time = time.time()
+    #mem_before = process_memory()
     solver = BrandAndBoundTSPSolution(distances)
-    final_res, final_path = solver.solve()
+    cost, path = solver.tsp_branch_and_bound()
+    #mem_after = process_memory()
     end_time = time.time()
     execution_time = end_time - start_time
-    return final_res, final_path, execution_time
+    #memory_consomming = mem_after - mem_before
+    return cost, path, execution_time #,memory_consomming
 
 
 # Code principal

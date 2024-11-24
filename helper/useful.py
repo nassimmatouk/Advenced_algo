@@ -1,6 +1,8 @@
+import os
 from math import sqrt
 import random
 import networkx as nx  # Pour la génération et la vérification des graphes
+import psutil
 
 
 def compute_distance_euc_2d(node_i, node_j,nodes_coord):
@@ -47,3 +49,10 @@ def generate_watts_strogatz_graph(num_cities, k=2, prob=0.3, max_distance=100):
     distances = [[0 if i == j else (random.randint(1, max_distance) if G.has_edge(i, j) else float('inf')) for j in range(num_cities)] for i in range(num_cities)]
     
     return distances
+
+
+# inner psutil function
+def process_memory():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    return mem_info.rss

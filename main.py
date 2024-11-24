@@ -8,9 +8,10 @@ def main():
 
     """
     workbench = Worbench(algo_to_compare=[
-                                                                                    Algorithm.MST,
-                                                                                    Algorithm.BRANCH_BOUND
-                                                                                    ],
+                                         Algorithm.BRANCH_BOUND ,
+                                         Algorithm.MST_KRUSKAL,
+                                         Algorithm.MST_PRIM
+                                               ],
                                                 interval_numbers_nodes=(3, 17),
                                                 symmetric=True
                                                 )

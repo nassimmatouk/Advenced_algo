@@ -91,6 +91,8 @@ def measure_execution_time_branch_bound(distances):
     end_time = time.time()
     execution_time = end_time - start_time
     return final_res, final_path, execution_time
+
+
 # Code principal
 if __name__ == "__main__":
 

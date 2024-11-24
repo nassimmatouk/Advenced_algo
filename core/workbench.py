@@ -6,7 +6,8 @@ from matplotlib import pyplot as plt
 
 from helper.useful import generate_random_matrix
 from implementation.tsp_branch_and_bound import measure_execution_time_branch_bound
-from implementation.tsp_mst import measure_execution_time_mst
+from implementation.tsp_mst_approach_krusKal import measure_execution_time_mst_kruskal
+from implementation.tsp_mst_approach_prim import measure_execution_time_mst_prim
 
 
 class Algorithm(Enum):
@@ -15,8 +16,8 @@ class Algorithm(Enum):
     NOM_ALGO = (fonction_de_mesure_de_temps, couleur_sur_le_graphique)
     """
     BRANCH_BOUND = measure_execution_time_branch_bound, "b"
-    MST = measure_execution_time_mst, "r"
-
+    MST_KRUSKAL = measure_execution_time_mst_kruskal, "r"
+    MST_PRIM = measure_execution_time_mst_prim, "o"
 
 
 class Worbench:

@@ -1,3 +1,4 @@
+import time
 import numpy as np
 from heapq import heappop, heappush
 
@@ -24,6 +25,7 @@ def prim_mst(adj):
 
     return mst_edges
 
+
 def preorder_traversal(mst, start):
     from collections import defaultdict, deque
 
@@ -45,16 +47,46 @@ def preorder_traversal(mst, start):
     dfs(start)
     return path
 
+
 def tsp_mst_approximation(adj):
     mst = prim_mst(adj)
     path = preorder_traversal(mst, 0)
     path.append(path[0])  # return to the starting point
     return path
 
+
+# Fonction pour mesurer le temps d'exécution d'une fonction
+def measure_execution_time_mst_prim(func, *args, **kwargs):
+    """
+    Mesure le temps d'exécution d'une fonction donnée.
+    - func: fonction à exécuter.
+    - args, kwargs: arguments passés à la fonction.
+    """
+    start_time = time.time()  # Temps de départ
+    result = func(*args, **kwargs)  # Appel de la fonction
+    end_time = time.time()  # Temps de fin
+    print(f"Temps d'exécution de {func.__name__}: {end_time - start_time:.6f} secondes")
+    return result
+
+
 # Code principal
 if __name__ == "__main__":
 
-    adj = generate_random_matrix(num_cities=10, symmetric=True)
+    # Boucle pour tester avec différentes tailles de graphes (nombre de villes)
+    for number_cities in range(3, 100):
+        print("\n******************** Nombre de villes :", number_cities, "********************")
 
-    path = tsp_mst_approximation(adj)
-    print("Chemin approximatif du TSP (MST) :", path)
+        # Génère une matrice d'adjacence aléatoire pour le graphe
+        adj = generate_random_matrix(num_cities=number_cities, symmetric=True)
+
+        # Mesure le temps d'exécution de l'approximation TSP avec Prim
+        path = measure_execution_time_mst_prim(tsp_mst_approximation, adj)
+
+        # Calcul du coût total du chemin
+        cost = sum(adj[path[i]][path[i + 1]] for i in range(len(path) - 1))
+
+        # Affichage des résultats
+        print("Chemin approximatif du TSP (MST avec Prim) :", path)
+        print("Nombre de villes :", number_cities)
+        print("Distance minimale :", cost)
+

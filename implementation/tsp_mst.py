@@ -1,8 +1,6 @@
 import math
 import time
-
 from matplotlib import pyplot as plt
-
 from helper.useful import generate_random_matrix, generate_erdos_renyi_graph, compute_distance_euc_2d
 
 
@@ -72,9 +70,10 @@ if __name__ == "__main__":
 
     for number_cities in range(5,200):
         distances = generate_random_matrix(num_cities=number_cities, symmetric=True)
-        # Tester la résolution brute-force
+        # Tester la résolution minimum spanning tree
         mst_edges, cost, path, execution_time = measure_execution_time(distances)
         print("nombres de villes : ", number_cities)
         print("Temps d'éxecution :", execution_time)
         print("Distance minimale :", cost)
         print("Meilleur chemin :", path)
+

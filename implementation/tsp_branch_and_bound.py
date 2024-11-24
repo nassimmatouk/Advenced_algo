@@ -1,100 +1,106 @@
-import math
+import sys
+import time
 
-# Fonction pour calculer la distance Euclidienne
-def distance(city1, city2):
-    return math.sqrt((city2[0] - city1[0]) ** 2 + (city2[1] - city1[1]) ** 2)
+import numpy as np
 
-
-# Fonction de réduction de la matrice : réduit les coûts pour chaque ligne et chaque colonne
-def reduce_matrix(dist_matrix):
-    n = len(dist_matrix)
-    row_reduction = [float('inf')] * n
-    col_reduction = [float('inf')] * n
-
-    # Réduction des lignes
-    for i in range(n):
-        row_min = min(dist_matrix[i])
-        if row_min != float('inf'):
-            row_reduction[i] = row_min
-            for j in range(n):
-                if dist_matrix[i][j] != float('inf'):
-                    dist_matrix[i][j] -= row_min
-
-    # Réduction des colonnes
-    for j in range(n):
-        col_min = min(dist_matrix[i][j] for i in range(n))
-        if col_min != float('inf'):
-            col_reduction[j] = col_min
-            for i in range(n):
-                if dist_matrix[i][j] != float('inf'):
-                    dist_matrix[i][j] -= col_min
-
-    return row_reduction, col_reduction
+from helper.useful import generate_random_matrix
 
 
-# Fonction de calcul de la borne inférieure : somme des réductions de lignes et de colonnes
-def calculate_bound(dist_matrix):
-    row_reduction, col_reduction = reduce_matrix([row[:] for row in dist_matrix])
-    bound = sum(row_reduction) + sum(col_reduction)
-    return bound
+class BrandAndBoundTSPSolution:
+    def __init__(self, adj):
+        self.N = len(adj)
+        self.adj = adj
+        self.final_path = [None] * (self.N + 1)
+        self.visited = [False] * self.N
+        self.final_res = sys.maxsize
 
+    def copy_to_final(self, curr_path):
+        for index in range(self.N):
+            self.final_path[index] = curr_path[index]
+        self.final_path[self.N] = curr_path[0]
 
-# Fonction de recherche Branch-and-Bound pour le TSP
-def branch_and_bound_tsp(dist_matrix):
-    n = len(dist_matrix)
-    best_bound = float('inf')
-    best_solution = None
+    def first_min(self, i):
+        min_val = sys.maxsize
+        for k in range(self.N):
+            if self.adj[i][k] < min_val and i != k:
+                min_val = self.adj[i][k]
+        return min_val
 
-    # Fonction récursive pour l'exploration de l'arbre
-    def search(current_path, visited, current_bound, current_cost):
-        nonlocal best_bound, best_solution
+    def second_min(self, i):
+        first, second = sys.maxsize, sys.maxsize
+        for j in range(self.N):
+            if i == j:
+                continue
+            if self.adj[i][j] <= first:
+                second = first
+                first = self.adj[i][j]
+            elif self.adj[i][j] <= second and self.adj[i][j] != first:
+                second = self.adj[i][j]
+        return second
 
-        # Si toutes les villes sont visitées, vérifier la solution
-        if len(current_path) == n:
-            # Ajouter le coût de retour à la ville de départ
-            current_cost += dist_matrix[current_path[-1]][current_path[0]]
-            if current_cost < best_bound:
-                best_bound = current_cost
-                best_solution = current_path + [current_path[0]]
+    def tsp_rec(self, curr_bound, curr_weight, level, curr_path):
+        if level == self.N:
+            if self.adj[curr_path[level - 1]][curr_path[0]] != 0:
+                curr_res = curr_weight + self.adj[curr_path[level - 1]][curr_path[0]]
+                if curr_res < self.final_res:
+                    self.copy_to_final(curr_path)
+                    self.final_res = curr_res
             return
 
-        # Pruner si le coût courant + la borne est supérieure à la meilleure solution
-        if current_cost + current_bound >= best_bound:
-            return
+        for i in range(self.N):
+            if self.adj[curr_path[level - 1]][i] != 0 and not self.visited[i]:
+                temp = curr_bound
+                curr_weight += self.adj[curr_path[level - 1]][i]
 
-        # Explorer toutes les villes non visitées
-        for i in range(n):
-            if not visited[i]:
-                # Réduire la matrice en fonction de la ville i
-                new_visited = visited[:]
-                new_visited[i] = True
-                new_path = current_path + [i]
-                new_cost = current_cost + dist_matrix[current_path[-1]][i] if current_path else 0
+                if level == 1:
+                    curr_bound -= (self.first_min(curr_path[level - 1]) + self.first_min(i)) / 2
+                else:
+                    curr_bound -= (self.second_min(curr_path[level - 1]) + self.first_min(i)) / 2
 
-                # Calculer la nouvelle borne inférieure
-                new_bound = calculate_bound([dist_matrix[j][:] for j in range(n)])
-                search(new_path, new_visited, new_bound, new_cost)
+                if curr_bound + curr_weight < self.final_res:
+                    curr_path[level] = i
+                    self.visited[i] = True
+                    self.tsp_rec(curr_bound, curr_weight, level + 1, curr_path)
 
-    # Initialiser la recherche
-    visited = [False] * n
-    search([0], visited, calculate_bound(dist_matrix), 0)
+                curr_weight -= self.adj[curr_path[level - 1]][i]
+                curr_bound = temp
+                self.visited = [False] * self.N
+                for j in range(level):
+                    self.visited[curr_path[j]] = True
 
-    return best_solution, best_bound
+    def solve(self):
+        curr_path = [-1] * (self.N + 1)
+        curr_bound = 0
+
+        for index in range(self.N):
+            curr_bound += (self.first_min(index) + self.second_min(index))
+
+        curr_bound = curr_bound // 2 if curr_bound % 2 == 0 else curr_bound // 2 + 1
+
+        self.visited[0] = True
+        curr_path[0] = 0
+
+        self.tsp_rec(curr_bound, 0, 1, curr_path)
+
+        return self.final_res, self.final_path
+
+def measure_execution_time_branch_bound(distances):
+    start_time = time.time()
+    solver = BrandAndBoundTSPSolution(distances)
+    final_res, final_path = solver.solve()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return final_res, final_path, execution_time
+# Code principal
+if __name__ == "__main__":
 
 
-# Exemple d'utilisation
-
-# Exemple de matrice de distances (coordonnées des villes)
-cities = [
-    (288, 149), (288, 129), (270, 133), (256, 141), (256, 157),
-    (246, 157), (236, 169), (228, 169), (228, 161), (220, 169)
-]
-
-# Construction de la matrice des distances
-dist_matrix = [[distance(city1, city2) for city2 in cities] for city1 in cities]
-
-# Résolution du problème avec Branch-and-Bound
-best_solution, best_bound = branch_and_bound_tsp(dist_matrix)
-
-print("Meilleure solution:", best_solution)
-print("Coût total:", best_bound)
+    for number_cities in range(3, 100):
+        print("******************** Nombre de villes :", number_cities, "********************")
+        adj = generate_random_matrix(num_cities=number_cities, symmetric=True)
+        cost, final_path,  execution_time= measure_execution_time_branch_bound(adj)
+        print("Coût minimum :", cost)
+        print("Chemin emprunté :", end=' ')
+        print("Temps d'exécution :", execution_time)
+        for i in range(len(final_path)):
+            print(final_path[i], end=' ')

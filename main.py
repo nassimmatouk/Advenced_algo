@@ -1,11 +1,19 @@
-from helper.distance import compute_distance_euc_2d
-from parser.parser import parse_tsp_file
+
+from core.workbench import Worbench, Algorithm
 
 
 def main():
-    file_path = 'C:\\Users\\userlocal\\PycharmProjects\\algoMST\\data\\a280.tsp'  # Remplace par le chemin vers ton fichier
-    parsed_data = parse_tsp_file(file_path)
-    distance = compute_distance_euc_2d(12, 100, parsed_data['NODE_COORDS'])
-    print(distance)
+    """
+    Main function
+
+    """
+    workbench = Worbench(algo_to_compare=[
+                                                                                    Algorithm.MST,
+                                                                                    Algorithm.BRANCH_BOUND
+                                                                                    ],
+                                                interval_numbers_nodes=(3, 17),
+                                                symmetric=True
+                                                )
+    workbench.compare()
 
 main()

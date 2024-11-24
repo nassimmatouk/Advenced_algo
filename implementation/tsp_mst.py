@@ -35,12 +35,12 @@ def minimun_spanning_trees(cities):
 
     return mst_edges, cost, path
 
-def measure_execution_time(cities):
+def measure_execution_time_mst(cities):
     start_time = time.time()
-    mst_edges, cost, path = minimun_spanning_trees(cities)
+    _, cost, path = minimun_spanning_trees(cities)
     end_time = time.time()
     execution_time = end_time - start_time
-    return mst_edges, cost, path, execution_time
+    return  cost, path, execution_time
 
 
 def analyze_complexity(max_cities=10):
@@ -50,7 +50,7 @@ def analyze_complexity(max_cities=10):
     for num_cities in city_counts:
         distances = generate_random_matrix(num_cities, symmetric=True)
 
-        mst_edges, cost, path, execution_time = measure_execution_time(distances)
+        mst_edges, cost, path, execution_time = measure_execution_time_mst(distances)
         times.append(execution_time)
         print(f"{num_cities} villes: temps d'exécution = {execution_time:.4f} secondes")
 
@@ -61,7 +61,6 @@ def analyze_complexity(max_cities=10):
     plt.title("Complexité en temps de l'algorithme TSP (Minimun Spanning Trees)")
     plt.show()
 
-
 if __name__ == "__main__":
     # Exemple : générer une matrice aléatoire de distances
 
@@ -71,7 +70,7 @@ if __name__ == "__main__":
     for number_cities in range(5,200):
         distances = generate_random_matrix(num_cities=number_cities, symmetric=True)
         # Tester la résolution minimum spanning tree
-        mst_edges, cost, path, execution_time = measure_execution_time(distances)
+        cost, path, execution_time = measure_execution_time_mst(distances)
         print("nombres de villes : ", number_cities)
         print("Temps d'éxecution :", execution_time)
         print("Distance minimale :", cost)

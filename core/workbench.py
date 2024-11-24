@@ -1,3 +1,8 @@
+
+##  Auteur: Ana SANOU
+##  Date de création : 24/11/2024
+##
+##
 from enum import Enum
 from functools import lru_cache
 from typing import List, Tuple

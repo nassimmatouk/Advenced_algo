@@ -1,8 +1,6 @@
 
 ##  Auteur: Ana SANOU
 ##  Date de création : 24/11/2024
-##
-##
 from enum import Enum
 from functools import lru_cache
 from typing import List, Tuple
@@ -14,7 +12,7 @@ from implementation.tsp_branch_and_bound import measure_execution_time_branch_bo
 from implementation.tsp_brute_force_copy import measure_execution_time_brute_force
 from implementation.tsp_mst_approach_krusKal import measure_execution_time_mst_kruskal
 from implementation.tsp_mst_approach_prim import measure_execution_time_mst_prim
-
+from implementation.tsp_nearest_neighours import measure_execution_time_nearest_neighbor
 
 class Algorithm(Enum):
     """
@@ -25,6 +23,7 @@ class Algorithm(Enum):
     MST_KRUSKAL = measure_execution_time_mst_kruskal, "r"
     MST_PRIM = measure_execution_time_mst_prim, "o"
     BRUTE_FORCE = measure_execution_time_brute_force, "g"
+    NEAREST_NEIGHBOR = measure_execution_time_nearest_neighbor, "y"
 
 class Worbench:
     def __init__(self, algo_to_compare: List[Algorithm],

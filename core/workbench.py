@@ -33,8 +33,6 @@ class Algorithm(Enum):
 
 
 
-
-
 class Dataset(Enum):
     """
     Enumération des datasets à comparer

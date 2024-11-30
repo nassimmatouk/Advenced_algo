@@ -2,25 +2,26 @@ import time
 import numpy as np
 from helper.useful import generate_random_matrix
 
-# Classe pour implémenter les ensembles disjoints (Union-Find)
+# Class to implement Disjoint Sets (Union-Find)
 class DisjointSet:
     def __init__(self, n):
-        # Initialisation : chaque élément est son propre parent
+        # Initialization: each element is its own parent
         self.parent = list(range(n))
-        self.rank = [0] * n  # Suivi des rangs pour optimiser les unions
+        # Rank array to optimize union operations
+        self.rank = [0] * n
 
     def find(self, u):
-        # Trouve le représentant de l'ensemble contenant u (avec compression de chemin)
+        # Find the representative of the set containing u (with path compression)
         if self.parent[u] != u:
-            self.parent[u] = self.find(self.parent[u])
+            self.parent[u] = self.find(self.parent[u])  # Optimization by attaching directly to the root parent
         return self.parent[u]
 
     def union(self, u, v):
-        # Réalise l'union des ensembles contenant u et v
+        # Union the sets containing u and v
         root_u = self.find(u)
         root_v = self.find(v)
         if root_u != root_v:
-            # Attache l'arbre de plus faible rang sous l'arbre de plus grand rang
+            # Attach the tree with the smaller rank to the tree with the larger rank
             if self.rank[root_u] > self.rank[root_v]:
                 self.parent[root_v] = root_u
             elif self.rank[root_u] < self.rank[root_v]:
@@ -29,87 +30,76 @@ class DisjointSet:
                 self.parent[root_v] = root_u
                 self.rank[root_u] += 1
 
-# Fonction pour construire un arbre couvrant minimum (MST) avec l'algorithme de Kruskal
+# Kruskal's Algorithm to construct the MST
 def kruskal_mst(adj):
     N = len(adj)
     edges = []
-    # Collecte toutes les arêtes avec leurs poids
+    # Collect all edges with their weights
     for i in range(N):
         for j in range(i + 1, N):
             if adj[i][j] != 0:
                 edges.append((adj[i][j], i, j))
-    edges.sort()  # Trie les arêtes par poids croissant
+    edges.sort()  # Sort edges by ascending weight
 
-    ds = DisjointSet(N)  # Initialisation des ensembles disjoints
+    ds = DisjointSet(N)  # Initialize Union-Find
     mst_edges = []
 
-    # Parcours des arêtes triées
+    # Iterate through sorted edges
     for edge in edges:
         weight, u, v = edge
-        if ds.find(u) != ds.find(v):  # Si u et v ne sont pas dans le même ensemble
-            ds.union(u, v)  # Union des ensembles
-            mst_edges.append((u, v, weight))  # Ajout de l'arête au MST
+        if ds.find(u) != ds.find(v):  # If u and v are not in the same set
+            ds.union(u, v)  # Union the sets
+            mst_edges.append((u, v, weight))  # Add edge to MST
 
     return mst_edges
 
-# Fonction pour effectuer un parcours préfixe (preorder traversal) d'un MST
+# Preorder traversal of the MST to get a path
 def preorder_traversal(mst, start):
     from collections import defaultdict
 
-    # Construction d'un graphe non orienté à partir du MST
+    # Build an undirected graph from the MST
     graph = defaultdict(list)
     for u, v, cost in mst:
         graph[u].append(v)
         graph[v].append(u)
 
-    visited = set()  # Ensemble des nœuds visités
-    path = []  # Chemin construit
+    visited = set()  # Set of visited nodes
+    path = []
 
     def dfs(node):
-        # Parcours en profondeur (DFS)
+        # Depth First Search (DFS) to build the path in preorder
         visited.add(node)
         path.append(node)
         for neighbor in graph[node]:
             if neighbor not in visited:
                 dfs(neighbor)
 
-    dfs(start)  # Démarrage du DFS depuis le nœud donné
+    dfs(start)
     return path
 
-# Approximation du problème du TSP avec l'arbre couvrant minimum
+# Approximation of TSP using Minimum Spanning Tree
 def tsp_mst_kruskal(adj):
-    mst = kruskal_mst(adj)  # Construction du MST
-    path = preorder_traversal(mst, 0)  # Parcours préfixe du MST
-    path.append(path[0])  # Retour au point de départ pour former un cycle
-    cost = sum(adj[path[i]][path[i + 1]] for i in range(len(path) - 1))
+    mst = kruskal_mst(adj)  # Construct the MST with Kruskal
+    path = preorder_traversal(mst, 0)  # Preorder traversal of the MST
+    path.append(path[0])  # Return to the start point to form a cycle
+    cost = sum(adj[path[i]][path[i + 1]] for i in range(len(path) - 1))  # Calculate the total cost
     return cost, path
 
-# Fonction pour mesurer le temps d'exécution d'une autre fonction
-
-
+# Function to measure execution time of the TSP approximation
 def measure_execution_time_mst_kruskal(distances):
     start_time = time.time()
-    cost, path = tsp_mst_kruskal(distances)
+    cost, path = tsp_mst_kruskal(distances)  # Run TSP approximation
     end_time = time.time()
     execution_time = end_time - start_time
     return cost, path, execution_time
 
-
-
-# Code principal
+# Main code specific to only the kruskal algorithm
 if __name__ == "__main__":
-    # Boucle pour tester avec différentes tailles de graphes (nombre de villes)
+    # Loop to test with different graph sizes (number of cities)
     for number_cities in range(3, 100):
-        print("\n******************** Nombre de villes :", number_cities, "********************")
-
-        # Génère une matrice d'adjacence aléatoire pour le graphe
-        adj = generate_random_matrix(num_cities=number_cities, symmetric=True)
-
-        # Mesure le temps d'exécution de l'approximation TSP
-        cost, path, execution_time = measure_execution_time_mst_kruskal(adj)
-
-        # Affichage des résultats
-        print("Chemin approximatif du TSP (MST avec Kruskal) :", path)
-        print("Nombre de villes :", number_cities)
-        print("Distance minimale :", cost)
-
+        print("\n******************** Number of cities:", number_cities, "********************")
+        adj = generate_random_matrix(num_cities=number_cities, symmetric=True)  # Generate an adjacency matrix
+        cost, path, execution_time = measure_execution_time_mst_kruskal(adj)  # Measure execution time
+        print("Approximate TSP Path (MST with Kruskal):", path)
+        print("Number of cities:", number_cities)
+        print("Minimal distance:", cost)

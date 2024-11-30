@@ -1,14 +1,10 @@
 import os
-from math import sqrt
 import random
 import networkx as nx  # Pour la génération et la vérification des graphes
 import psutil
 
 
-def compute_distance_euc_2d(node_i, node_j,nodes_coord):
-    coord_i = nodes_coord[node_i]
-    coord_j = nodes_coord[node_j]
-    return sqrt((coord_j[0]-coord_i[0])**2 + (coord_j[1]-coord_i[1])**2)
+
 
 def generate_random_matrix(num_cities, symmetric=True, max_distance=100):
     """
@@ -21,7 +17,8 @@ def generate_random_matrix(num_cities, symmetric=True, max_distance=100):
         for i in range(num_cities):
             for j in range(i + 1, num_cities):
                 distances[j][i] = distances[i][j]
-    
+
+
     return distances
 
 def generate_erdos_renyi_graph(num_cities, prob=0.5, max_distance=100):
@@ -56,3 +53,5 @@ def process_memory():
     process = psutil.Process(os.getpid())
     mem_info = process.memory_info()
     return mem_info.rss
+
+

@@ -85,14 +85,11 @@ class BrandAndBoundTSPSolution:
 # fonction pour le calcul du temps d'exécution et de l'espace en memoire
 def measure_execution_time_branch_bound(distances):
     start_time = time.time()
-    #mem_before = process_memory()
     solver = BrandAndBoundTSPSolution(distances)
     cost, path = solver.tsp_branch_and_bound()
-    #mem_after = process_memory()
     end_time = time.time()
     execution_time = end_time - start_time
-    #memory_consomming = mem_after - mem_before
-    return cost, path, execution_time #,memory_consomming
+    return cost, path, execution_time
 
 
 # Code principal

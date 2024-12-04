@@ -12,7 +12,7 @@ from datasets.tsp_data_a280 import get_data_a280
 from datasets.generate_data import generate_random_matrix
 
 # Import des algorithmes à comparer
-from implementation.tsp_branch_and_bound import measure_execution_time_branch_bound
+from implementation.tsp_branch_and_bound_matrix_reduce import measure_execution_time_branch_bound
 from implementation.tsp_brute_force_copy import measure_execution_time_brute_force
 from implementation.tsp_mst_approach_krusKal import measure_execution_time_mst_kruskal
 from implementation.tsp_mst_approach_prim import measure_execution_time_mst_prim

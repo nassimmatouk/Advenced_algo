@@ -16,8 +16,8 @@ def main():
                                                ],
                                                 interval_numbers_nodes=(3, 10),
                                                 symmetric=True,
-                                               # dataset=Dataset.RANDOM,
-                                                dataset=Dataset.A280,
+                                               dataset=Dataset.RANDOM,
+                                               #dataset=Dataset.A280,
                                                  draw_one_graph=False
                                                 )
     workbench.compare()

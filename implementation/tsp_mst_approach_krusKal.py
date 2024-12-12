@@ -103,3 +103,5 @@ if __name__ == "__main__":
         print("Approximate TSP Path (MST with Kruskal):", path)
         print("Number of cities:", number_cities)
         print("Minimal distance:", cost)
+
+

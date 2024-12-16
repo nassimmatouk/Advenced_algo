@@ -1,6 +1,12 @@
 import time
 import numpy as np
-from helper.useful import generate_random_matrix
+#from helper.useful import generate_random_matrix
+
+import sys
+import os
+# Ajouter le répertoire parent au PYTHONPATH (pour pouvoir exécuté directement le fichier)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from helper.useful import generate_random_matrix, generate_erdos_renyi_graph, generate_watts_strogatz_graph
 
 # Class to implement Disjoint Sets (Union-Find)
 class DisjointSet:
@@ -103,3 +109,5 @@ if __name__ == "__main__":
         print("Approximate TSP Path (MST with Kruskal):", path)
         print("Number of cities:", number_cities)
         print("Minimal distance:", cost)
+
+

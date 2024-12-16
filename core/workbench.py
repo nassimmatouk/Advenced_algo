@@ -13,7 +13,9 @@ from datasets.generate_data import generate_random_matrix
 
 # Import des algorithmes à comparer
 from implementation.tsp_branch_and_bound_matrix_reduce import measure_execution_time_branch_bound
-from implementation.tsp_brute_force_copy import measure_execution_time_brute_force
+from implementation.tsp_brute_force import measure_execution_time_brute_force
+from implementation.tsp_greedy import measure_execution_time_greedy
+from implementation.tsp_randomized import measure_execution_time_randomized
 from implementation.tsp_mst_approach_krusKal import measure_execution_time_mst_kruskal
 from implementation.tsp_mst_approach_prim import measure_execution_time_mst_prim
 from implementation.tsp_nearest_neighours import measure_execution_time_nearest_neighbor
@@ -29,7 +31,10 @@ class Algorithm(Enum):
     MST_KRUSKAL = measure_execution_time_mst_kruskal, "r"
     MST_PRIM = measure_execution_time_mst_prim, "o"
     BRUTE_FORCE = measure_execution_time_brute_force, "g"
-    NEAREST_NEIGHBOR = measure_execution_time_nearest_neighbor, "y"
+    NEAREST_NEIGHBOR = measure_execution_time_nearest_neighbor, "g"
+    GREEDY = measure_execution_time_greedy, "g"
+    RANDOMIZED = measure_execution_time_randomized, "g"
+    
 
 
 

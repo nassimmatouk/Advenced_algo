@@ -12,13 +12,16 @@ def main():
                                          Algorithm.MST_KRUSKAL,
                                          Algorithm.BRANCH_BOUND,
                                          Algorithm.MST_PRIM,
-                                         Algorithm.NEAREST_NEIGHBOR
+                                         Algorithm.NEAREST_NEIGHBOR,
+                                         Algorithm.GREEDY,
+                                         Algorithm.RANDOMIZED
+
                                                ],
                                                 interval_numbers_nodes=(3, 10),
-                                                symmetric=True,
-                                               dataset=Dataset.RANDOM,
-                                               #dataset=Dataset.A280,
-                                                 draw_one_graph=False
+                                                symmetric=False,
+                                                dataset=Dataset.RANDOM,
+                                                #dataset=Dataset.A280,
+                                                draw_one_graph=False
                                                 )
     workbench.compare()
 

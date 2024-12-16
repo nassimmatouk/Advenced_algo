@@ -1,7 +1,7 @@
 import os
 import random
 import networkx as nx  # Pour la génération et la vérification des graphes
-import psutil
+#import psutil
 
 
 

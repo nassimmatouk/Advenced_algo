@@ -34,7 +34,8 @@ def tsp_brute_force(distances):
             min_distance = current_distance
             best_route = perm
     
-    return best_route, min_distance
+    #return best_route, min_distance
+    return list(best_route) + [best_route[0]], min_distance
 
 # Création d'une matrice de distances depuis TSPLIB
 def create_distance_matrix(problem, max_nodes=8):
@@ -81,11 +82,20 @@ def plot_solution(cities, best_route):
     plt.legend()
     plt.show()
 
+# Function to measure execution time of the TSP approximation
 def measure_execution_time(distances):
     start_time = time.time()
-    _, min_distance = tsp_brute_force(distances)
+    best_route, min_distance = tsp_brute_force(distances)  # Run TSP approximation
     end_time = time.time()
-    return end_time - start_time
+    execution_time = end_time - start_time
+    return min_distance, best_route, execution_time
+
+def measure_execution_time_brute_force(distances):
+    start_time = time.time()
+    best_route, min_distance = tsp_brute_force(distances)  # Run TSP approximation
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return min_distance, best_route, execution_time
 
 def analyze_complexity(max_cities=10):
     times = []
@@ -164,6 +174,16 @@ if __name__ == "__main__":
     #test_random_matrix(num_cities=6)
 
     # Test 3 : Instance TSPLIB
-    tsp_file = "C:/Users/userlocal/Desktop/M1/AA/theProject/berlin52.tsp"
-    test_tsplib_instance(tsp_file, max_nodes=8)
+    #tsp_file = "C:/Users/userlocal/Desktop/M1/AA/theProject/berlin52.tsp"
+    #test_tsplib_instance(tsp_file, max_nodes=8)
+    print("\n*************************************************************")
+    print("*                      TPS BRUTE FORCE                      *")
+    print("*************************************************************")
+    for number_cities in range(3, 10):
+        print("\n-------------------- Number of cities:", number_cities, "--------------------")
+        adj = generate_random_matrix(num_cities=number_cities, symmetric=True)  # Generate an adjacency matrix
+        cost, path, execution_time = measure_execution_time_brute_force(adj)  # Measure execution time
+        print("Approximate TSP Path :", path)
+        #print("Number of cities:", number_cities)
+        print("Minimal distance:", cost)
 

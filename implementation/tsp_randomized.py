@@ -58,6 +58,13 @@ def create_distance_matrix(problem, max_nodes=8):
                 distances[i, j] = problem.get_weight(nodes[i], nodes[j])
     return distances, nodes
 
+def measure_execution_time_randomized(distances):
+    start_time = time.time()
+    best_route, min_distance = tsp_randomized(distances)  # Run TSP approximation
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return min_distance, best_route, execution_time
+
 def plot_graph(cities, distances=None, labels=True):
     G = nx.Graph()
 

@@ -72,3 +72,5 @@ if __name__ == "__main__":
         print("Approximate TSP path (MST with Prim):", path)
         print("Number of cities:", number_cities)
         print("Minimum distance:", cost)
+
+

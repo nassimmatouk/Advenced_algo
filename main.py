@@ -14,13 +14,14 @@ def main():
                                          Algorithm.MST_PRIM,
                                          Algorithm.NEAREST_NEIGHBOR,
                                          Algorithm.GREEDY,
-                                         Algorithm.RANDOMIZED
+                                         Algorithm.RANDOMIZED,
+                                         Algorithm.BRANCH_BOUND_CLASSIC
 
                                                ],
                                                 interval_numbers_nodes=(3, 10),
-                                                symmetric=False,
-                                                dataset=Dataset.RANDOM,
-                                                #dataset=Dataset.A280,
+                                                symmetric=True,
+                                                #dataset=Dataset.RANDOM,
+                                                dataset=Dataset.A280,
                                                 draw_one_graph=False
                                                 )
     workbench.compare()

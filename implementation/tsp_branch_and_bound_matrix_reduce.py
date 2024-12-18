@@ -1,6 +1,6 @@
 import sys
 import time
-from helper.useful import generate_random_matrix, process_memory
+from helper.useful import generate_random_matrix
 
 
 class BrandAndBoundTSPSolution:

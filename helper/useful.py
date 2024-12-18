@@ -1,10 +1,6 @@
 import os
 import random
 import networkx as nx  # Pour la génération et la vérification des graphes
-#import psutil
-
-
-
 
 def generate_random_matrix(num_cities, symmetric=True, max_distance=100):
     """
@@ -47,11 +43,5 @@ def generate_watts_strogatz_graph(num_cities, k=2, prob=0.3, max_distance=100):
     
     return distances
 
-
-# inner psutil function
-def process_memory():
-    process = psutil.Process(os.getpid())
-    mem_info = process.memory_info()
-    return mem_info.rss
 
 
